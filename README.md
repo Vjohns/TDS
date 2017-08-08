@@ -1,6 +1,6 @@
 # TDS
-Mechanism for quickly creating and using C# unit-test methods, using Visual Studio.
-<br/>
-This project is being ported from CodePlex and does not yet contain current information.
+This is a mechanism for quickly creating and using C# unit-test methods, with the help of Visual Studio.
 
-For now, go to tds.codeplex.com for code and documentation.
+This project originated at tds.codeplex.com.
+
+Please open file "TDS User Guide 2_0.pdf" for documentation, examples, tutorial, etc.
