@@ -1,0 +1,343 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets
+    xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.2">
+    <Header>
+      <Title>TDS Test Method</Title>
+      <Author>Vincent R. Johns</Author>
+      <Description>
+        Code snippet for a Test-Driven Scaffolding (TDS) test method.
+      </Description>
+      <HelpUrl>tds.codeplex.com</HelpUrl>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Keywords>
+        <Keyword>Unit test</Keyword>
+        <Keyword>TDS</Keyword>
+        <Keyword>Test driven scaffolding</Keyword>
+        <Keyword>test method</Keyword>
+      </Keywords>
+      <Shortcut>TdsTest</Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>ActualId</ID>
+          <ToolTip>
+            Name of variable representing a value
+            returned or modified by the function member.
+          </ToolTip>
+          <Default>actual</Default>
+        </Literal>
+        <Literal>
+          <ID>ExceptionMessageExpected</ID>
+          <ToolTip>
+            Name of variable containing
+            the message of the exception
+            expected to be thrown after
+            the function member is invoked.
+          </ToolTip>
+          <Default>exceptionMsgExp</Default>
+        </Literal>
+        <Literal>
+          <ID>ExceptionThrown</ID>
+          <ToolTip>
+            Name of variable used to identify an
+            exception thrown after
+            the function member is invoked.
+          </ToolTip>
+          <Default>exceptionThrown</Default>
+        </Literal>
+        <Literal>
+          <ID>ExpectedExceptionProperty</ID>
+          <ToolTip>
+            Property in a test values array element
+            containing a string that begins
+            the message in an exception that
+            the function member is expected to throw.
+            Empty string ("") implies that no
+            exception is expected.
+          </ToolTip>
+          <Default>ExceptionExp</Default>
+        </Literal>
+        <Literal>
+          <ID>ExpectedOutputProperty</ID>
+          <ToolTip>
+            Property in a test values array element
+            containing an expected value,
+            to be compared to output
+            from the function member.
+          </ToolTip>
+          <Default>ValueExp</Default>
+        </Literal>
+        <Literal>
+          <ID>FilterList</ID>
+          <ToolTip>
+            Name of string containing list of tags of
+            test cases to be run when the
+            conditional compilation symbol
+            RunOnlySelectedTestData is defined.
+          </ToolTip>
+          <Default>testSelectionList</Default>
+        </Literal>
+        <Literal>
+          <ID>FunctionMember</ID>
+          <ToolTip>
+            Enter the name of the function member to be tested,
+            without the "Test" suffix.
+          </ToolTip>
+          <Default>TestableFunctionMember</Default>
+        </Literal>
+        <Literal>
+          <ID>IdProperty</ID>
+          <ToolTip>
+            Property in a test values array element
+            containing a name identifying the element,
+            for use in filtering test cases.
+          </ToolTip>
+          <Default>Id</Default>
+        </Literal>
+        <Literal>
+          <ID>InputValueProperty</ID>
+          <ToolTip>
+            Property in a test values array element
+            containing a value to be passed as input
+            to the function member.
+          </ToolTip>
+          <Default>Arg</Default>
+        </Literal>
+        <Literal>
+          <ID>TestCaseId</ID>
+          <ToolTip>
+            Name of the variable containing an element
+            of the test values array to be used in
+            function-member invocations and
+            Assert() statements.
+          </ToolTip>
+          <Default>tCase</Default>
+        </Literal>
+        <Literal>
+          <ID>TestValuesArray</ID>
+          <ToolTip>
+            Name of the array of anonymous objects providing
+            the values of inputs to and expected outputs
+            from the function member.
+          </ToolTip>
+          <Default>testValues</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="CSharp" 
+            Kind="method decl">
+        <![CDATA[
+    /// <summary>
+    /// TDS Test of $end$$FunctionMember$ .
+    /// </summary>
+    [TestMethod]
+    public void $FunctionMember$Test()
+    {
+#region $TestValuesArray$[]
+
+#if RunOnlySelectedTestData
+      //Space-separated list of "$IdProperty$" tags of test cases, to be run
+      //  in the order in which they are defined in $TestValuesArray$[]
+      const string $FilterList$ = @"01";  
+#endif //RunOnlySelectedTestData
+
+      var $TestValuesArray$ = new[] {
+
+        new {
+          //TODO: $FunctionMember$Test() -- Define inputs and expected outputs.
+          $IdProperty$ = "01 Sample test", // Test case identifier (required),
+              //  consisting of a unique 2- or 3-character tag, a space,
+              //  and a short description of the test case.
+          $InputValueProperty$ = 3,  // Input value
+          $ExpectedExceptionProperty$ = DefaultExceptionMessage,  // Expected exception
+              //  This specifies a string that the beginning
+              //  of the exception message, if any, is expected to match.
+              //  "" is treated as "No exception is expected".
+          $ExpectedOutputProperty$ = 4,  // Expected returned value
+        },
+
+        //If more than one array element is defined here
+        //    and comments describing these properties
+        //    were included in the definition of $TestValuesArray$[0],
+        //    comments describing the properties need not be repeated
+        //    on these other instances.
+        //  However, you may find it useful to apply comments to some
+        //    of the specific values in the test cases.
+
+};
+#endregion $TestValuesArray$[]
+
+      try
+      {
+        if (IsUsingStandAloneTds)
+          InitializeTestMethod();
+
+        foreach (var $TestCaseId$ in
+#if !RunOnlySelectedTestData
+  $TestValuesArray$
+#else //RunOnlySelectedTestData
+  from testCase in $TestValuesArray$
+  where IsInSelectionList(testCase.$IdProperty$, $FilterList$)
+  select testCase
+#endif //RunOnlySelectedTestData
+)
+        {
+
+#region Invoke testable function members
+          //Message value of an exception that the
+          //  function member to be called might throw
+          var $ExceptionThrown$ = DefaultExceptionMessage;
+
+          //Expected exception message for this test case
+          var $ExceptionMessageExpected$ = ($TestCaseId$.$ExpectedExceptionProperty$ == "")
+                ? DefaultExceptionMessage
+                : $TestCaseId$.$ExpectedExceptionProperty$;
+
+          //TODO: $FunctionMember$Test() -- Use a suitable default value.
+          //Local variable to receive a value to be returned
+          //  by the function member
+          var $ActualId$ = 0;  
+
+          try
+          {
+            //TODO: $FunctionMember$Test() -- Provide a suitable calling expression
+            $ActualId$ = $FunctionMember$($TestCaseId$.$InputValueProperty$);
+
+            //Before any tests are added (in the "#region Apply tests"
+            //    region), the purpose of the above statement
+            //    is only to invoke the function member (in this
+            //    case, $FunctionMember$ )
+            //    while it is under development, to make it easy
+            //    to observe the values of variables during tracing,
+            //    so any returned value is unimportant here.
+            //  After the new function member's code is complete enough
+            //    to begin returning values to the TDS test method,
+            //    these returned values (and the results of any side effects,
+            //    such as changes to the values of public fields)
+            //    are available for use in Assert statements,
+            //    such as those appearing here
+            //    and in the "#region Apply tests when ..." region.
+            
+          }
+          catch (Exception e)
+          {
+            $ExceptionThrown$ = e.Message;
+
+            //TODO: $FunctionMember$Test() -- Provide suitable exception tests here
+            Assert.IsTrue(
+                  $ExceptionThrown$.StartsWith
+                    ($ExceptionMessageExpected$),
+                  MsgForUnexpectedException(
+                    "$FunctionMember$", $TestCaseId$.$IdProperty$,
+                    $ExceptionMessageExpected$, $ExceptionThrown$
+                  ));
+
+            //Skip the remaining tests for this test case;
+            //  no useful values are returned after an Exception.
+            continue;
+          }
+#endregion Invoke testable function members
+
+#region Apply tests when no exception is raised
+
+          //Test that if no exception occurred, none was expected.
+          Assert.IsTrue(
+                $ExceptionMessageExpected$ == DefaultExceptionMessage,
+                MsgForMissingException(
+                  "$FunctionMember$", $TestCaseId$.$IdProperty$,
+                  $ExceptionMessageExpected$
+                ));
+
+          //TODO: $FunctionMember$Test() -- Provide suitable non-exception tests here
+          Assert.AreEqual(
+                $TestCaseId$.$ExpectedOutputProperty$,
+                $ActualId$,
+                string.Format(@"
+$FunctionMember$Test(), test case ""{0}"",
+  Argument: {1}"
+                    , $TestCaseId$.$IdProperty$  //{0}
+                    , $TestCaseId$.$InputValueProperty$  //{1}
+                  )
+                );
+#endregion Apply tests when no exception is raised
+
+        }  // end:foreach (var $TestCaseId$...
+
+      }
+      finally
+      {
+        if (IsUsingStandAloneTds)
+          CleanupTestMethod();
+      }
+
+      ////TODO: $FunctionMember$Test() -- Remove the Assert.Inconclusive()
+      ////  statement after this [TestMethod] is working:
+      Assert.Inconclusive(
+@"Verify the correctness of $FunctionMember$Test().");
+
+    }  // end:$FunctionMember$Test()
+
+        ]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+  <CodeSnippet Format="1.0.2">
+    <Header>
+      <Title>TDS Report Symbols</Title>
+      <Author>Vincent R. Johns</Author>
+      <Description>
+        Code snippet for code that identifies active
+        conditional-compilation symbols in a TDS source-code file
+      </Description>
+      <HelpUrl>tds.codeplex.com</HelpUrl>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Keywords>
+        <Keyword>Unit test</Keyword>
+        <Keyword>TDS</Keyword>
+        <Keyword>Test driven scaffolding</Keyword>
+        <Keyword>conditional compilation directive</Keyword>
+      </Keywords>
+      <Shortcut>TdsSymbol</Shortcut>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>Symbol</ID>
+          <ToolTip>
+            Name of the conditional-compilation Symbol
+            that may be defined in this TDS source file
+          </ToolTip>
+          <Default>TDS_platform</Default>
+        </Literal>
+        <Literal>
+          <ID>FileName</ID>
+          <ToolTip>
+            Name of this TDS source-code file,
+            without the trailing ".cs" file-name extension.
+          </ToolTip>
+          <Default>TDS_Ex01</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="CSharp"  Kind="method decl">
+        <![CDATA[
+    /// <summary>
+    /// True iff "#define $end$$Symbol$"
+    /// is active in this file, $FileName$.cs .
+    /// </summary>
+    public const bool $Symbol$_$FileName$ =
+#if $Symbol$
+ true;
+#else
+ false;
+#endif //$Symbol$
+
+        ]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

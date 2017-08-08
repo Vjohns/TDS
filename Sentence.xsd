@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright (C) 2012, Vincent R. Johns. All rights reserved. -->
+<xs:schema attributeFormDefault="unqualified"
+elementFormDefault="qualified"
+xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="SymType">
+    <xs:annotation>
+      <xs:documentation>
+        This element type allows a non-terminal &lt;Symbol&gt; element to
+        recursively contain other terminal or non-terminal &lt;Symbol&gt;s.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:choice>
+      <xs:sequence>
+        <!--Terminal symbol-->
+        <xs:element minOccurs="1" maxOccurs="1" name="String"
+        type="xs:string">
+          <xs:annotation>
+            <xs:documentation>
+              In a terminal &lt;Symbol&gt;, this identifies the matching
+              substring from the original Sentence. In a non-terminal &lt;Symbol&gt;,
+              this element is not used.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element minOccurs="1" maxOccurs="unbounded" name="Sense"
+        type="xs:string">
+          <xs:annotation>
+            <xs:documentation>
+              <para>
+                W value that identifies the semantic value of this
+                symbol, and that must match a symbol in a grammar &lt;Production&gt; (or
+                it must have a matching VocabSeries).
+              </para>
+              <para>
+                A terminal &lt;Symbol&gt; may have more than one
+                &lt;Sense&gt; element, possibly along with one or more &lt;Series&gt;
+                elements.
+              </para>
+              <para>
+                A non-terminal &lt;Symbol&gt; contains exactly one
+                &lt;Sense&gt; element, which identifies the type of &lt;Production&gt;
+                that spawned it. (&lt;Production&gt; identifiers need not be
+                unique.)
+              </para>
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="1" name="Description"
+        type="xs:string">
+          <xs:annotation>
+            <xs:documentation>
+              <para>
+                In a terminal &lt;Symbol&gt;, although no
+                &lt;Description&gt; element is originally present in the Sentence, its
+                contents are copied from the matching &lt;Symbol&gt; in the matching
+                &lt;Production&gt; . A &lt;Description&gt; may be used to provide
+                information about its &lt;Symbol&gt; that is not fully implied by its
+                &lt;Sense&gt; element.
+              </para>
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+      <xs:sequence>
+        <!--Non-terminal symbol-->
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="Sense"
+          type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                <para>
+                  W value that identifies the semantic value of this
+                  symbol, and that must match a &lt;Symbol&gt; in a grammar
+                  &lt;Production&gt; (or must have a matching VocabSeries).
+                </para>
+                <para>
+                  A terminal &lt;Symbol&gt; may have more than one
+                  &lt;Sense&gt; element, possibly along with one or more &lt;Series&gt;
+                  elements.
+                  Non-terminal &lt;Symbol&gt;s should contain exactly one
+                  &lt;Sense&gt; element.
+                </para>
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" name="Description"
+          type="xs:string">
+            <xs:annotation>
+              <xs:documentation>
+                <para>
+                  In a non-terminal &lt;Symbol&gt;, the
+                  &lt;Description&gt; is copied from the description (in parentheses) of
+                  the matching &lt;Production&gt; . It may be used to provide information
+                  about this &lt;Production&gt; that is not fully implied by this
+                  &lt;Symbol&gt;'s &lt;Sense&gt; element.
+                </para>
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="1" maxOccurs="unbounded" name="Symbol"
+          type="SymType">
+            <xs:annotation>
+              <xs:documentation>
+                <para>
+                  This &lt;Symbol&gt; has the same name (its
+                  &lt;Sense&gt; value) as the left-hand side of the &lt;Production&gt; that
+                  successfully matched this part of the &lt;Sentence&gt; on a previous
+                  pass. This &lt;Sense&gt; element is used to identify matching
+                  &lt;Symbol&gt;s that may be present in other &lt;Production&gt;s .
+                </para>
+                <para>
+                  The sequence of &lt;Symbol&gt; elements inside this
+                  &lt;Symbol&gt; represents the parts of the &lt;Sentence&gt; that matched
+                  the right-hand side of that &lt;Production&gt; .
+                </para>
+              </xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:sequence>
+    </xs:choice>
+    <xs:attribute name="sentence" type="xs:boolean" use="required" >
+      <xs:annotation>
+        <xs:documentation>
+          <para>
+            The sentence attribute of a &lt;Symbol&gt; is true iff
+            the &lt;Symbol&gt; can match a complete sentence.
+          </para>
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="Sentence" >
+    <xs:annotation>
+      <xs:documentation>
+        <para>
+          The original Sentence is initially translated to a sequence
+          of &lt;Symbol&gt; elements, usually consisting of one &lt;Sense&gt;
+          element (possibly more) per significant word.
+        </para>
+        <para>
+          When a grammar &lt;Production&gt; is found to match some or
+          all of the &lt;Symbol&gt;s in the &lt;Sentence&gt;, a sequence of
+          &lt;Symbol&gt; elements in the &lt;Sentence&gt; is replaced by the
+          &lt;Symbol&gt; representing the &lt;Production&gt;.
+        </para>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="unbounded" name="Symbol"
+        type="SymType" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
