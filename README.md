@@ -1,4 +1,3 @@
-b# TDS
 This is a mechanism for quickly creating and using C# unit-test methods, with the help of Visual Studio.
 
 This project originated at tds.codeplex.com.
