@@ -25,6 +25,7 @@ Suppose we wish to test public class S_Exp{...} that includes, among
 others, definitions of the following constructors:
 
   public S_Exp(S_Exp L, S_Exp R){...}
+
   public S_Exp(string L, string R){...}
 
 and contains a suitable ToString() method, perhaps something like this:
