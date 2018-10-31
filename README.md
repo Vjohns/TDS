@@ -2,10 +2,10 @@ This is a mechanism for quickly creating and using C# unit-test methods, with th
 
 For instructions, download the files using the green "Clone or download" button as TDS-master.zip,
 then unpack the contents of TDS-master.zip and
-open file "TDS User Guide 2_0b.pdf" for documentation, examples, tutorial, etc.  
+open file "TDS User Guide 2_0b.pdf" for documentation, examples, tutorial, etc.
+For a quick, updated summary, please see document "Updated summary, supplement to UG 2_0b.pdf".
 
 File "TDS User Guide 2_0b.docx" has the same contents, in MS Office Word format.
-File "TDS User Guide 2_0.pdf" also has the same contents, except that it does not contain the bookmarks.
 
 This project originated at tds.codeplex.com.
 
