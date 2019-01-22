@@ -9,7 +9,23 @@ File "TDS User Guide 2_0b.docx" has the same contents, in MS Office Word format.
 
 This project originated at tds.codeplex.com.
 
-===============
+---------------
+
+TDS is intended to provide a lightweight unit-test platform to define and run unit-test
+methods that are easy to set up and that are also compatible with MS Test and NUnit.
+
+TDS, after setup is complete, allows one to create a unit-test method by invoking a Visual Studio snippet and customizing it, using items in the Task List to assist with navigation.  (The setup includes installing Visual Studio if needed, importing the snippet, and satisfying some //TODO: Tasks.)
+
+If you use the TDS test platform (instead of the VS Test or NUnit platform) and wish to run only a subset of the TDS tests defined for the Visual Studio Solution, you may specify a subset of the TDS unit tests, and/or a subset of the test cases within a TDS test, to be run by editing the TDS.cs source code (as specified in its //TODO: Tasks).  The use of such filterings is noted within the test report, giving a warning that some of the (possibly failing) test cases have been skipped.  The TDS platform also provides methods for setup and teardown of the test environment.
+
+In accordance with traditional unit testing (see, for example, https://docs.microsoft.com/en-us/visualstudio/test/intellitest-manual/test-generation?view=vs-2017), each TDS unit-test method includes a standard set of "//TODO:" Tasks identifying
+ (1) test-case data, defining inputs and expected outputs, located in the testValues[] array near the beginning of each TDS test method's code;
+ (2) a statement that calls the C# function member (e.g., indexer, method, or property) to be tested, using the specified data; and
+ (3) "Assert" statements to perform the tests, including tests that the expected outputs are received and that all expected exceptions, and no unexpected ones, are thrown.
+
+TDS is designed for use from within Visual Studio, but it may be used independently of Visual Studio, by editing the snippet file or one of the provided example test methods, to serve as a C# method template.  Suitably edited, the TDS.cs file contains everything needed to define and run a collection of TDS unit tests.
+
+---------------
 
 The following material supplements (or possibly corrects) the contents of the
 TDS User Guide 2_0b and will be incorporated into the next version (if any)
@@ -91,12 +107,20 @@ or, with a bit more complexity, like this:
         },
 
 The expression in the tCase.Lambda property isn't evaluated until the
+
             actual = tCase.Lambda();
+
 statement is reached.  (For tracing, this statement may be a suitable location for a breakpoint.)
 
 Note: in this example, the parentheses are significant; the statement
-   actual = tCase.Lambda.ToString()  would fetch only the name of the type, whereas
-   actual = tCase.Lambda().ToString()  will capture the result of running the code.
+
+   actual = tCase.Lambda.ToString()  
+   
+would fetch only the name of the type, whereas
+
+   actual = tCase.Lambda().ToString()
+   
+will capture the result of running the code.
    We want the result of running it to match the value of the tCase.ValueExp string.
    The parentheses are empty in this example merely becaue tCase.Lambda() takes
    no parameters.  All of the parameters used in calls to S_Exp() in this example
